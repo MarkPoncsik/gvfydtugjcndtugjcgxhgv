@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Это не секрет</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #ffe0ec, #e0f7ff);
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2em;
+      color: #ff4f81;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      background-color: #ff90b3;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ff6c99;
+    }
+
+    .gallery {
+      margin-top: 30px;
+      display: none;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .gallery img {
+      max-width: 200px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Это не секрет, но я хочу чтоб ты знала 😊</h1>
+  <button onclick="showGallery()">Нажми сюда, любимая ❤️✨</button>
+  <div class="gallery" id="photoGallery">
+    <img src="https://i.postimg.cc/C1cDCHMZ/IMG-20250519-214553-516.jpg" alt="Фото 1">
+    <img src="https://i.postimg.cc/sXj7Z0zd/IMG-20250519-214622-173.jpg" alt="Фото 2">
+    <img src="https://i.postimg.cc/hvhm2zh2/IMG-20250519-214643-733.jpg" alt="Фото 3">
+    <img src="https://i.postimg.cc/Dzd103tP/IMG-20250519-214651-574.jpg" alt="Фото 4">
+    <img src="https://i.postimg.cc/9XNZrpNK/Screenshot-20250515-074337-Telegram.jpg" alt="Фото 5">
+    <img src="https://i.postimg.cc/c4gYYnpH/Screenshot-20250517-212954-Tik-Tok.jpg" alt="Фото 6">
+  </div>
+
+  <script>
+    function showGallery() {
+      document.getElementById('photoGallery').style.display = 'flex';
+    }
+  </script>
+</body>
+
+</html>
