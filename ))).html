@@ -1,78 +1,234 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
-  <meta charset="UTF-8">
-  <title>Это не секрет</title>
+  <meta charset="UTF-8" />
+  <title>Для тебя</title>
   <style>
     body {
-      background: linear-gradient(135deg, #ffe0ec, #e0f7ff);
       font-family: 'Segoe UI', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 20px;
+      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+      color: #333;
       text-align: center;
+      padding: 40px;
+      overflow-x: hidden;
     }
 
-    h1 {
-      font-size: 2em;
-      color: #ff4f81;
-      margin-bottom: 20px;
-    }
-
-    button {
-      padding: 15px 30px;
-      font-size: 1.2em;
-      background-color: #ff90b3;
-      color: white;
+    .hidden { display: none; }
+    .btn {
+      padding: 10px 20px;
+      margin-top: 20px;
+      background-color: #ff88bb;
       border: none;
-      border-radius: 12px;
+      color: white;
+      border-radius: 10px;
       cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      transition: background-color 0.3s ease;
+      font-size: 18px;
     }
 
-    button:hover {
-      background-color: #ff6c99;
-    }
-
-    .gallery {
-      margin-top: 30px;
-      display: none;
-      flex-wrap: wrap;
+    .grid {
+      display: grid;
       gap: 15px;
       justify-content: center;
+      margin-top: 20px;
     }
 
-    .gallery img {
-      max-width: 200px;
+    .wordBlock {
+      font-family: monospace;
+      font-size: 18px;
+      line-height: 1.6;
+      width: 90%;
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card, .memory-card {
+      width: 80px;
+      height: 80px;
+      background: white;
+      border-radius: 10px;
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    #final h2 {
+      animation: fadeIn 2s ease-in-out;
+      font-size: 28px;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    #final p {
+      font-size: 22px;
+      color: #fff;
+      animation: fadeIn 3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .heart {
+      position: absolute;
+      color: #ff4d6d;
+      font-size: 24px;
+      animation: float 6s infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-100vh); opacity: 0; }
     }
   </style>
 </head>
-
 <body>
-  <h1>Это не секрет, но я хочу чтоб ты знала 😊</h1>
-  <button onclick="showGallery()">Нажми сюда, любимая ❤️✨</button>
-  <div class="gallery" id="photoGallery">
-    <img src="https://i.postimg.cc/C1cDCHMZ/IMG-20250519-214553-516.jpg" alt="Фото 1">
-    <img src="https://i.postimg.cc/sXj7Z0zd/IMG-20250519-214622-173.jpg" alt="Фото 2">
-    <img src="https://i.postimg.cc/hvhm2zh2/IMG-20250519-214643-733.jpg" alt="Фото 3">
-    <img src="https://i.postimg.cc/Dzd103tP/IMG-20250519-214651-574.jpg" alt="Фото 4">
-    <img src="https://i.postimg.cc/9XNZrpNK/Screenshot-20250515-074337-Telegram.jpg" alt="Фото 5">
-    <img src="https://i.postimg.cc/c4gYYnpH/Screenshot-20250517-212954-Tik-Tok.jpg" alt="Фото 6">
-  </div>
 
-  <script>
-    function showGallery() {
-      document.getElementById('photoGallery').style.display = 'flex';
+<h1>Мини-квест для тебя</h1>
+
+<!-- Игра 1: Внимательность -->
+<div id="step1">
+  <h2>Найди слово среди хаоса</h2>
+  <div class="wordBlock" id="wordBlock"></div>
+  <input type="text" id="wordInput" placeholder="Что ты нашла?">
+  <br>
+  <button class="btn" onclick="checkWord()">Проверить</button>
+</div>
+
+<!-- Игра 2: Memory Match -->
+<div id="step2" class="hidden">
+  <h2>Найди пары</h2>
+  <div class="grid" id="memoryGrid" style="grid-template-columns: repeat(4, 80px);"></div>
+</div>
+
+<!-- Игра 3: Найди сердечко -->
+<div id="step3" class="hidden">
+  <h2>Найди сердечко</h2>
+  <div class="grid" id="heartGrid" style="grid-template-columns: repeat(3, 100px);"></div>
+</div>
+
+<!-- Финал -->
+<div id="final" class="hidden">
+  <h2>Ты прошла всё!</h2>
+  <p>Ты чудо. Спасибо, что ты есть. Я тебя люблю.</p>
+</div>
+
+<script>
+  // Игра 1 — внимательность
+  const hiddenWord = "любовь";
+  const symbols = "abcdefghijklmnopqrstuvwxyz1234567890!?@#$%^&*абвгдежзийклмнопрстуфхцчшщъыьэюя".split('');
+  const chaos = () => {
+    let str = "";
+    for (let i = 0; i < 600; i++) {
+      if (i === 250) str += hiddenWord;
+      else str += symbols[Math.floor(Math.random() * symbols.length)];
     }
-  </script>
-</body>
+    return str.match(/.{1,50}/g).join('\n');
+  };
+  document.getElementById("wordBlock").innerText = chaos();
 
+  function checkWord() {
+    const input = document.getElementById("wordInput").value.toLowerCase().trim();
+    if (input === hiddenWord) {
+      document.getElementById("step1").classList.add("hidden");
+      document.getElementById("step2").classList.remove("hidden");
+      initMemoryGame();
+    } else {
+      alert("Попробуй ещё!");
+    }
+  }
+
+  // Игра 2 — memory match
+  let firstCard = null;
+  let lock = false;
+  let matchedPairs = 0;
+  function initMemoryGame() {
+    const emojis = ["🍓","🌸","⭐","🍩"];
+    let pairs = emojis.concat(emojis).sort(() => 0.5 - Math.random());
+    const grid = document.getElementById("memoryGrid");
+
+    pairs.forEach((emoji, index) => {
+      const card = document.createElement("div");
+      card.className = "memory-card";
+      card.dataset.value = emoji;
+      card.textContent = "";
+      card.onclick = () => {
+        if (lock || card.textContent) return;
+        card.textContent = emoji;
+        if (!firstCard) {
+          firstCard = card;
+        } else {
+          if (firstCard.dataset.value === card.dataset.value) {
+            firstCard = null;
+            matchedPairs++;
+            if (matchedPairs === 4) {
+              setTimeout(() => {
+                document.getElementById("step2").classList.add("hidden");
+                document.getElementById("step3").classList.remove("hidden");
+                initHeartGame();
+              }, 600);
+            }
+          } else {
+            lock = true;
+            setTimeout(() => {
+              card.textContent = "";
+              firstCard.textContent = "";
+              firstCard = null;
+              lock = false;
+            }, 800);
+          }
+        }
+      };
+      grid.appendChild(card);
+    });
+  }
+
+  // Игра 3 — сердечко
+  function initHeartGame() {
+    const grid = document.getElementById("heartGrid");
+    const heartIndex = Math.floor(Math.random() * 9);
+    for (let i = 0; i < 9; i++) {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.textContent = "?";
+      card.onclick = () => {
+        if (i === heartIndex) {
+          card.textContent = "❤️";
+          setTimeout(() => {
+            document.getElementById("step3").classList.add("hidden");
+            document.getElementById("final").classList.remove("hidden");
+            startHearts();
+          }, 1000);
+        } else {
+          card.textContent = "❌";
+          card.style.pointerEvents = "none";
+        }
+      };
+      grid.appendChild(card);
+    }
+  }
+
+  // Анимация финала
+  function startHearts() {
+    for (let i = 0; i < 30; i++) {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.textContent = "❤️";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.top = "100vh";
+      heart.style.fontSize = 16 + Math.random() * 24 + "px";
+      heart.style.animationDuration = 3 + Math.random() * 5 + "s";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 8000);
+    }
+  }
+</script>
+
+</body>
 </html>
