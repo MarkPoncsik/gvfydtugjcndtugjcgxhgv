@@ -12,7 +12,6 @@
       padding: 40px;
       overflow-x: hidden;
     }
-
     .hidden { display: none; }
     .btn {
       padding: 10px 20px;
@@ -24,14 +23,12 @@
       cursor: pointer;
       font-size: 18px;
     }
-
     .grid {
       display: grid;
       gap: 15px;
       justify-content: center;
       margin-top: 20px;
     }
-
     .wordBlock {
       font-family: monospace;
       font-size: 18px;
@@ -42,8 +39,12 @@
       background: white;
       padding: 20px;
       border-radius: 10px;
+      white-space: pre-wrap;
     }
-
+    .highlight {
+      background-color: yellow;
+      font-weight: bold;
+    }
     .card, .memory-card {
       width: 80px;
       height: 80px;
@@ -56,32 +57,27 @@
       cursor: pointer;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
-
     #final h2 {
       animation: fadeIn 2s ease-in-out;
       font-size: 28px;
       color: #fff;
       margin-bottom: 10px;
     }
-
     #final p {
       font-size: 22px;
       color: #fff;
       animation: fadeIn 3s ease-in-out;
     }
-
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
     .heart {
       position: absolute;
       color: #ff4d6d;
       font-size: 24px;
       animation: float 6s infinite;
     }
-
     @keyframes float {
       0% { transform: translateY(0); opacity: 1; }
       100% { transform: translateY(-100vh); opacity: 0; }
@@ -92,59 +88,83 @@
 
 <h1>Мини-квест для тебя</h1>
 
-<!-- Игра 1: Внимательность -->
 <div id="step1">
-  <h2>Найди слово среди хаоса</h2>
+  <h2>Найди добрые слова среди хаоса</h2>
   <div class="wordBlock" id="wordBlock"></div>
-  <input type="text" id="wordInput" placeholder="Что ты нашла?">
+  <input type="text" id="wordInput" placeholder="Напиши одно из слов">
   <br>
   <button class="btn" onclick="checkWord()">Проверить</button>
 </div>
 
-<!-- Игра 2: Memory Match -->
 <div id="step2" class="hidden">
   <h2>Найди пары</h2>
   <div class="grid" id="memoryGrid" style="grid-template-columns: repeat(4, 80px);"></div>
 </div>
 
-<!-- Игра 3: Найди сердечко -->
 <div id="step3" class="hidden">
   <h2>Найди сердечко</h2>
   <div class="grid" id="heartGrid" style="grid-template-columns: repeat(3, 100px);"></div>
 </div>
 
-<!-- Финал -->
 <div id="final" class="hidden">
   <h2>Ты прошла всё!</h2>
-  <p>Ты чудо. Спасибо, что ты есть. Я тебя люблю.</p>
+  <p id="finalMsg"></p>
+  <p>Ты чудо. Я ценю тебя и хочу проводить с тобой больше времени. Не переживай — мы справимся со всеми трудностями вместе.</p>
 </div>
 
 <script>
-  // Игра 1 — внимательность
-  const hiddenWord = "любовь";
+  const allWords = ["солнце", "поддержка", "я с тобой", "нежность", "ты не одна", "держись", "любимая", "забота", "спокойствие", "ты сильная"];
+  const messages = {
+    "солнце": "Ты моё солнце, которое освещает каждый мой день.",
+    "поддержка": "Я всегда рядом и поддержу тебя в любой момент.",
+    "я с тобой": "Я с тобой, даже когда мы далеко.",
+    "нежность": "Ты наполняешь мою жизнь нежностью.",
+    "ты не одна": "Ты никогда не одна. Я рядом.",
+    "держись": "Ты сильная, и я держу тебя за руку.",
+    "любимая": "Ты — моя любимая, моя вселенная.",
+    "забота": "Твоя забота греет мою душу.",
+    "спокойствие": "С тобой приходит спокойствие и радость.",
+    "ты сильная": "Ты сильная, и я горжусь тобой."
+  };
+
+  const chosenWords = [];
+  while (chosenWords.length < 3) {
+    const word = allWords[Math.floor(Math.random() * allWords.length)];
+    if (!chosenWords.includes(word)) chosenWords.push(word);
+  }
+
   const symbols = "abcdefghijklmnopqrstuvwxyz1234567890!?@#$%^&*абвгдежзийклмнопрстуфхцчшщъыьэюя".split('');
-  const chaos = () => {
+  const insertPoints = [150, 300, 450];
+  let selectedText = "";
+
+  function chaosText() {
     let str = "";
     for (let i = 0; i < 600; i++) {
-      if (i === 250) str += hiddenWord;
-      else str += symbols[Math.floor(Math.random() * symbols.length)];
+      if (insertPoints.includes(i)) {
+        const word = chosenWords[insertPoints.indexOf(i)];
+        str += `<span class='highlight'>${word}</span>`;
+      } else {
+        str += symbols[Math.floor(Math.random() * symbols.length)];
+      }
     }
+    selectedText = str;
     return str.match(/.{1,50}/g).join('\n');
-  };
-  document.getElementById("wordBlock").innerText = chaos();
+  }
+  document.getElementById("wordBlock").innerHTML = chaosText();
 
+  let matchedWord = "";
   function checkWord() {
     const input = document.getElementById("wordInput").value.toLowerCase().trim();
-    if (input === hiddenWord) {
+    matchedWord = chosenWords.find(word => input === word.toLowerCase());
+    if (matchedWord) {
       document.getElementById("step1").classList.add("hidden");
       document.getElementById("step2").classList.remove("hidden");
       initMemoryGame();
     } else {
-      alert("Попробуй ещё!");
+      alert("Попробуй ещё! Подсказка: это что-то тёплое.");
     }
   }
 
-  // Игра 2 — memory match
   let firstCard = null;
   let lock = false;
   let matchedPairs = 0;
@@ -153,7 +173,7 @@
     let pairs = emojis.concat(emojis).sort(() => 0.5 - Math.random());
     const grid = document.getElementById("memoryGrid");
 
-    pairs.forEach((emoji, index) => {
+    pairs.forEach((emoji) => {
       const card = document.createElement("div");
       card.className = "memory-card";
       card.dataset.value = emoji;
@@ -189,7 +209,6 @@
     });
   }
 
-  // Игра 3 — сердечко
   function initHeartGame() {
     const grid = document.getElementById("heartGrid");
     const heartIndex = Math.floor(Math.random() * 9);
@@ -204,6 +223,7 @@
             document.getElementById("step3").classList.add("hidden");
             document.getElementById("final").classList.remove("hidden");
             startHearts();
+            document.getElementById("finalMsg").textContent = messages[matchedWord] || "Ты невероятная!";
           }, 1000);
         } else {
           card.textContent = "❌";
@@ -214,7 +234,6 @@
     }
   }
 
-  // Анимация финала
   function startHearts() {
     for (let i = 0; i < 30; i++) {
       const heart = document.createElement("div");
