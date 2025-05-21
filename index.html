@@ -1,78 +1,194 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
-  <meta charset="UTF-8">
-  <title>Это не секрет</title>
+  <meta charset="UTF-8" />
+  <title>Для тебя</title>
   <style>
     body {
-      background: linear-gradient(135deg, #ffe0ec, #e0f7ff);
       font-family: 'Segoe UI', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 20px;
+      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+      color: #333;
       text-align: center;
+      padding: 40px;
+      overflow: hidden;
     }
 
-    h1 {
-      font-size: 2em;
-      color: #ff4f81;
-      margin-bottom: 20px;
-    }
+    .hidden { display: none; }
 
-    button {
-      padding: 15px 30px;
-      font-size: 1.2em;
-      background-color: #ff90b3;
-      color: white;
+    .btn {
+      padding: 10px 20px;
+      margin-top: 20px;
+      background-color: #ff88bb;
       border: none;
-      border-radius: 12px;
+      color: white;
+      border-radius: 10px;
       cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      transition: background-color 0.3s ease;
+      font-size: 18px;
     }
 
-    button:hover {
-      background-color: #ff6c99;
-    }
-
-    .gallery {
-      margin-top: 30px;
-      display: none;
-      flex-wrap: wrap;
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
       gap: 15px;
       justify-content: center;
+      margin-top: 20px;
     }
 
-    .gallery img {
-      max-width: 200px;
+    .card {
+      width: 100px;
+      height: 100px;
+      background: white;
       border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    #phraseInput {
+      padding: 10px;
+      font-size: 18px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    #final h2 {
+      animation: fadeIn 2s ease-in-out;
+      font-size: 28px;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    #final p {
+      font-size: 22px;
+      color: #fff;
+      animation: fadeIn 3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Сердца на фоне */
+    .heart {
+      position: absolute;
+      color: #ff4d6d;
+      font-size: 24px;
+      animation: float 6s infinite;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh);
+        opacity: 0;
+      }
     }
   </style>
 </head>
-
 <body>
-  <h1>Это не секрет, но я хочу чтоб ты знала 😊</h1>
-  <button onclick="showGallery()">Нажми сюда, любимая ❤️✨</button>
-  <div class="gallery" id="photoGallery">
-    <img src="https://i.postimg.cc/C1cDCHMZ/IMG-20250519-214553-516.jpg" alt="Фото 1">
-    <img src="https://i.postimg.cc/sXj7Z0zd/IMG-20250519-214622-173.jpg" alt="Фото 2">
-    <img src="https://i.postimg.cc/hvhm2zh2/IMG-20250519-214643-733.jpg" alt="Фото 3">
-    <img src="https://i.postimg.cc/Dzd103tP/IMG-20250519-214651-574.jpg" alt="Фото 4">
-    <img src="https://i.postimg.cc/9XNZrpNK/Screenshot-20250515-074337-Telegram.jpg" alt="Фото 5">
-    <img src="https://i.postimg.cc/c4gYYnpH/Screenshot-20250517-212954-Tik-Tok.jpg" alt="Фото 6">
+
+  <h1>Мини-квест для тебя</h1>
+
+  <!-- Этап 1 -->
+  <div id="step1">
+    <h2>Этап 1: Ответь на загадку</h2>
+    <p>Что не имеет тела, но может обнять?</p>
+    <input type="text" id="answer1" placeholder="Твой ответ">
+    <br>
+    <button class="btn" onclick="checkAnswer1()">Проверить</button>
+  </div>
+
+  <!-- Этап 2 -->
+  <div id="step2" class="hidden">
+    <h2>Этап 2: Найди сердечко</h2>
+    <div class="cards" id="cardContainer"></div>
+  </div>
+
+  <!-- Этап 3 -->
+  <div id="step3" class="hidden">
+    <h2>Этап 3: Введи фразу</h2>
+    <p>Введи фразу: <strong>я тебя люблю</strong></p>
+    <input type="text" id="phraseInput" placeholder="Напиши фразу">
+    <br>
+    <button class="btn" onclick="checkPhrase()">Готово</button>
+  </div>
+
+  <!-- Финал -->
+  <div id="final" class="hidden">
+    <h2>Ты прошла всё!</h2>
+    <p>Ты самая чудесная.  
+    Спасибо, что есть.  
+    Я тебя люблю.</p>
   </div>
 
   <script>
-    function showGallery() {
-      document.getElementById('photoGallery').style.display = 'flex';
+    function checkAnswer1() {
+      const input = document.getElementById("answer1").value.toLowerCase().trim();
+      if (input.includes("тень") || input.includes("мысль") || input.includes("любовь") || input.includes("объятие") || input.includes("сон")) {
+        document.getElementById("step1").classList.add("hidden");
+        document.getElementById("step2").classList.remove("hidden");
+        setupCards();
+      } else {
+        alert("Подумай ещё! Это чувство или что-то невидимое.");
+      }
+    }
+
+    function setupCards() {
+      const container = document.getElementById("cardContainer");
+      const heartIndex = Math.floor(Math.random() * 9);
+      for (let i = 0; i < 9; i++) {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.textContent = "?";
+        card.onclick = () => {
+          if (i === heartIndex) {
+            card.textContent = "❤️";
+            setTimeout(() => {
+              document.getElementById("step2").classList.add("hidden");
+              document.getElementById("step3").classList.remove("hidden");
+            }, 1000);
+          } else {
+            card.textContent = "❌";
+            card.style.pointerEvents = "none";
+          }
+        };
+        container.appendChild(card);
+      }
+    }
+
+    function checkPhrase() {
+      const phrase = document.getElementById("phraseInput").value.toLowerCase().trim();
+      if (phrase === "я тебя люблю") {
+        document.getElementById("step3").classList.add("hidden");
+        document.getElementById("final").classList.remove("hidden");
+        startHearts();
+      } else {
+        alert("Ммм, почти! Напиши фразу полностью.");
+      }
+    }
+
+    function startHearts() {
+      for (let i = 0; i < 30; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.textContent = "❤️";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.top = "100vh";
+        heart.style.fontSize = 16 + Math.random() * 24 + "px";
+        heart.style.animationDuration = 3 + Math.random() * 5 + "s";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 8000);
+      }
     }
   </script>
-</body>
 
+</body>
 </html>
