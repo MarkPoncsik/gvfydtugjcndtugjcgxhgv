@@ -10,11 +10,10 @@
       color: #333;
       text-align: center;
       padding: 40px;
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
     .hidden { display: none; }
-
     .btn {
       padding: 10px 20px;
       margin-top: 20px;
@@ -26,17 +25,28 @@
       font-size: 18px;
     }
 
-    .cards {
+    .grid {
       display: grid;
-      grid-template-columns: repeat(3, 100px);
       gap: 15px;
       justify-content: center;
       margin-top: 20px;
     }
 
-    .card {
-      width: 100px;
-      height: 100px;
+    .wordBlock {
+      font-family: monospace;
+      font-size: 18px;
+      line-height: 1.6;
+      width: 90%;
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .card, .memory-card {
+      width: 80px;
+      height: 80px;
       background: white;
       border-radius: 10px;
       font-size: 28px;
@@ -45,14 +55,6 @@
       justify-content: center;
       cursor: pointer;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-
-    #phraseInput {
-      padding: 10px;
-      font-size: 18px;
-      margin-top: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
     }
 
     #final h2 {
@@ -73,7 +75,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Сердца на фоне */
     .heart {
       position: absolute;
       color: #ff4d6d;
@@ -82,113 +83,152 @@
     }
 
     @keyframes float {
-      0% {
-        transform: translateY(0);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-100vh);
-        opacity: 0;
-      }
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-100vh); opacity: 0; }
     }
   </style>
 </head>
 <body>
 
-  <h1>Мини-квест для тебя</h1>
+<h1>Мини-квест для тебя</h1>
 
-  <!-- Этап 1 -->
-  <div id="step1">
-    <h2>Этап 1: Ответь на загадку</h2>
-    <p>Что не имеет тела, но может обнять?</p>
-    <input type="text" id="answer1" placeholder="Твой ответ">
-    <br>
-    <button class="btn" onclick="checkAnswer1()">Проверить</button>
-  </div>
+<!-- Игра 1: Внимательность -->
+<div id="step1">
+  <h2>Найди слово среди хаоса</h2>
+  <div class="wordBlock" id="wordBlock"></div>
+  <input type="text" id="wordInput" placeholder="Что ты нашла?">
+  <br>
+  <button class="btn" onclick="checkWord()">Проверить</button>
+</div>
 
-  <!-- Этап 2 -->
-  <div id="step2" class="hidden">
-    <h2>Этап 2: Найди сердечко</h2>
-    <div class="cards" id="cardContainer"></div>
-  </div>
+<!-- Игра 2: Memory Match -->
+<div id="step2" class="hidden">
+  <h2>Найди пары</h2>
+  <div class="grid" id="memoryGrid" style="grid-template-columns: repeat(4, 80px);"></div>
+</div>
 
-  <!-- Этап 3 -->
-  <div id="step3" class="hidden">
-    <h2>Этап 3: Введи фразу</h2>
-    <p>Введи фразу: <strong>я тебя люблю</strong></p>
-    <input type="text" id="phraseInput" placeholder="Напиши фразу">
-    <br>
-    <button class="btn" onclick="checkPhrase()">Готово</button>
-  </div>
+<!-- Игра 3: Найди сердечко -->
+<div id="step3" class="hidden">
+  <h2>Найди сердечко</h2>
+  <div class="grid" id="heartGrid" style="grid-template-columns: repeat(3, 100px);"></div>
+</div>
 
-  <!-- Финал -->
-  <div id="final" class="hidden">
-    <h2>Ты прошла всё!</h2>
-    <p>Ты самая чудесная.  
-    Спасибо, что есть.  
-    Я тебя люблю.</p>
-  </div>
+<!-- Финал -->
+<div id="final" class="hidden">
+  <h2>Ты прошла всё!</h2>
+  <p>Ты чудо. Спасибо, что ты есть. Я тебя люблю.</p>
+</div>
 
-  <script>
-    function checkAnswer1() {
-      const input = document.getElementById("answer1").value.toLowerCase().trim();
-      if (input.includes("тень") || input.includes("мысль") || input.includes("любовь") || input.includes("объятие") || input.includes("сон")) {
-        document.getElementById("step1").classList.add("hidden");
-        document.getElementById("step2").classList.remove("hidden");
-        setupCards();
-      } else {
-        alert("Подумай ещё! Это чувство или что-то невидимое.");
-      }
+<script>
+  // Игра 1 — внимательность
+  const hiddenWord = "любовь";
+  const symbols = "abcdefghijklmnopqrstuvwxyz1234567890!?@#$%^&*абвгдежзийклмнопрстуфхцчшщъыьэюя".split('');
+  const chaos = () => {
+    let str = "";
+    for (let i = 0; i < 600; i++) {
+      if (i === 250) str += hiddenWord;
+      else str += symbols[Math.floor(Math.random() * symbols.length)];
     }
+    return str.match(/.{1,50}/g).join('\n');
+  };
+  document.getElementById("wordBlock").innerText = chaos();
 
-    function setupCards() {
-      const container = document.getElementById("cardContainer");
-      const heartIndex = Math.floor(Math.random() * 9);
-      for (let i = 0; i < 9; i++) {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.textContent = "?";
-        card.onclick = () => {
-          if (i === heartIndex) {
-            card.textContent = "❤️";
-            setTimeout(() => {
-              document.getElementById("step2").classList.add("hidden");
-              document.getElementById("step3").classList.remove("hidden");
-            }, 1000);
+  function checkWord() {
+    const input = document.getElementById("wordInput").value.toLowerCase().trim();
+    if (input === hiddenWord) {
+      document.getElementById("step1").classList.add("hidden");
+      document.getElementById("step2").classList.remove("hidden");
+      initMemoryGame();
+    } else {
+      alert("Попробуй ещё!");
+    }
+  }
+
+  // Игра 2 — memory match
+  let firstCard = null;
+  let lock = false;
+  let matchedPairs = 0;
+  function initMemoryGame() {
+    const emojis = ["🍓","🌸","⭐","🍩"];
+    let pairs = emojis.concat(emojis).sort(() => 0.5 - Math.random());
+    const grid = document.getElementById("memoryGrid");
+
+    pairs.forEach((emoji, index) => {
+      const card = document.createElement("div");
+      card.className = "memory-card";
+      card.dataset.value = emoji;
+      card.textContent = "";
+      card.onclick = () => {
+        if (lock || card.textContent) return;
+        card.textContent = emoji;
+        if (!firstCard) {
+          firstCard = card;
+        } else {
+          if (firstCard.dataset.value === card.dataset.value) {
+            firstCard = null;
+            matchedPairs++;
+            if (matchedPairs === 4) {
+              setTimeout(() => {
+                document.getElementById("step2").classList.add("hidden");
+                document.getElementById("step3").classList.remove("hidden");
+                initHeartGame();
+              }, 600);
+            }
           } else {
-            card.textContent = "❌";
-            card.style.pointerEvents = "none";
+            lock = true;
+            setTimeout(() => {
+              card.textContent = "";
+              firstCard.textContent = "";
+              firstCard = null;
+              lock = false;
+            }, 800);
           }
-        };
-        container.appendChild(card);
-      }
-    }
+        }
+      };
+      grid.appendChild(card);
+    });
+  }
 
-    function checkPhrase() {
-      const phrase = document.getElementById("phraseInput").value.toLowerCase().trim();
-      if (phrase === "я тебя люблю") {
-        document.getElementById("step3").classList.add("hidden");
-        document.getElementById("final").classList.remove("hidden");
-        startHearts();
-      } else {
-        alert("Ммм, почти! Напиши фразу полностью.");
-      }
+  // Игра 3 — сердечко
+  function initHeartGame() {
+    const grid = document.getElementById("heartGrid");
+    const heartIndex = Math.floor(Math.random() * 9);
+    for (let i = 0; i < 9; i++) {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.textContent = "?";
+      card.onclick = () => {
+        if (i === heartIndex) {
+          card.textContent = "❤️";
+          setTimeout(() => {
+            document.getElementById("step3").classList.add("hidden");
+            document.getElementById("final").classList.remove("hidden");
+            startHearts();
+          }, 1000);
+        } else {
+          card.textContent = "❌";
+          card.style.pointerEvents = "none";
+        }
+      };
+      grid.appendChild(card);
     }
+  }
 
-    function startHearts() {
-      for (let i = 0; i < 30; i++) {
-        const heart = document.createElement("div");
-        heart.className = "heart";
-        heart.textContent = "❤️";
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.top = "100vh";
-        heart.style.fontSize = 16 + Math.random() * 24 + "px";
-        heart.style.animationDuration = 3 + Math.random() * 5 + "s";
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 8000);
-      }
+  // Анимация финала
+  function startHearts() {
+    for (let i = 0; i < 30; i++) {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.textContent = "❤️";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.top = "100vh";
+      heart.style.fontSize = 16 + Math.random() * 24 + "px";
+      heart.style.animationDuration = 3 + Math.random() * 5 + "s";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 8000);
     }
-  </script>
+  }
+</script>
 
 </body>
 </html>
