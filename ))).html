@@ -1,251 +1,105 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <title>Для тебя</title>
+  <meta charset="UTF-8">
+  <title>Найди слово</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
-      color: #333;
-      text-align: center;
+      background: linear-gradient(to right, #e0c3fc, #8ec5fc);
+      margin: 0;
       padding: 40px;
-      overflow-x: hidden;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 40px;
     }
-    .hidden { display: none; }
-    .btn {
-      padding: 10px 20px;
-      margin-top: 20px;
-      background-color: #ff88bb;
-      border: none;
-      color: white;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 18px;
-    }
-    .grid {
-      display: grid;
-      gap: 15px;
-      justify-content: center;
-      margin-top: 20px;
-    }
-    .wordBlock {
-      font-family: monospace;
-      font-size: 18px;
-      line-height: 1.6;
-      width: 90%;
-      max-width: 600px;
-      margin: 0 auto;
-      background: white;
+    .text-area {
+      width: 60%;
+      white-space: pre-wrap;
+      background: #fff;
       padding: 20px;
       border-radius: 10px;
-      white-space: pre-wrap;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-y: auto;
+      max-height: 80vh;
     }
-    .highlight {
-      background-color: yellow;
-      font-weight: bold;
+    .controls {
+      width: 30%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
-    .card, .memory-card {
-      width: 80px;
-      height: 80px;
+    input {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px;
+      background-color: #7e57c2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .found-words {
       background: white;
       border-radius: 10px;
-      font-size: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    #final h2 {
-      animation: fadeIn 2s ease-in-out;
-      font-size: 28px;
-      color: #fff;
-      margin-bottom: 10px;
-    }
-    #final p {
-      font-size: 22px;
-      color: #fff;
-      animation: fadeIn 3s ease-in-out;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .heart {
-      position: absolute;
-      color: #ff4d6d;
-      font-size: 24px;
-      animation: float 6s infinite;
-    }
-    @keyframes float {
-      0% { transform: translateY(0); opacity: 1; }
-      100% { transform: translateY(-100vh); opacity: 0; }
+      padding: 15px;
+      font-size: 16px;
+      min-height: 100px;
     }
   </style>
 </head>
 <body>
 
-<h1>Мини-квест для тебя</h1>
+<div class="text-area" id="textDisplay"></div>
 
-<div id="step1">
-  <h2>Найди добрые слова среди хаоса</h2>
-  <div class="wordBlock" id="wordBlock"></div>
-  <input type="text" id="wordInput" placeholder="Напиши одно из слов">
-  <br>
-  <button class="btn" onclick="checkWord()">Проверить</button>
-</div>
-
-<div id="step2" class="hidden">
-  <h2>Найди пары</h2>
-  <div class="grid" id="memoryGrid" style="grid-template-columns: repeat(4, 80px);"></div>
-</div>
-
-<div id="step3" class="hidden">
-  <h2>Найди сердечко</h2>
-  <div class="grid" id="heartGrid" style="grid-template-columns: repeat(3, 100px);"></div>
-</div>
-
-<div id="final" class="hidden">
-  <h2>Ты прошла всё!</h2>
-  <p id="finalMsg"></p>
-  <p>Ты чудо. Я ценю тебя и хочу проводить с тобой больше времени. Не переживай — мы справимся со всеми трудностями вместе.</p>
+<div class="controls">
+  <input type="text" id="wordInput" placeholder="Введи слово...">
+  <button onclick="submitWord()">Проверить</button>
+  <div class="found-words" id="foundSlot">Найдено:</div>
 </div>
 
 <script>
-  const allWords = ["солнце", "поддержка", "я с тобой", "нежность", "ты не одна", "держись", "любимая", "забота", "спокойствие", "ты сильная"];
-  const messages = {
-    "солнце": "Ты моё солнце, которое освещает каждый мой день.",
-    "поддержка": "Я всегда рядом и поддержу тебя в любой момент.",
-    "я с тобой": "Я с тобой, даже когда мы далеко.",
-    "нежность": "Ты наполняешь мою жизнь нежностью.",
-    "ты не одна": "Ты никогда не одна. Я рядом.",
-    "держись": "Ты сильная, и я держу тебя за руку.",
-    "любимая": "Ты — моя любимая, моя вселенная.",
-    "забота": "Твоя забота греет мою душу.",
-    "спокойствие": "С тобой приходит спокойствие и радость.",
-    "ты сильная": "Ты сильная, и я горжусь тобой."
-  };
-
+  const allWords = ["солнце", "поддержка", "нежность", "я с тобой", "ты не одна", "держись", "любимая", "забота", "спокойствие", "ты сильная"];
   const chosenWords = [];
   while (chosenWords.length < 3) {
     const word = allWords[Math.floor(Math.random() * allWords.length)];
     if (!chosenWords.includes(word)) chosenWords.push(word);
   }
 
-  const symbols = "abcdefghijklmnopqrstuvwxyz1234567890!?@#$%^&*абвгдежзийклмнопрстуфхцчшщъыьэюя".split('');
-  const insertPoints = [150, 300, 450];
-  let selectedText = "";
+  const symbols = "абвгдеёжзийклмнопрстуфхцчшщьыъэюяABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*".split("");
+  const insertPoints = [100, 300, 500];
+  let finalText = "";
 
-  function chaosText() {
-    let str = "";
-    for (let i = 0; i < 600; i++) {
-      if (insertPoints.includes(i)) {
-        const word = chosenWords[insertPoints.indexOf(i)];
-        str += `<span class='highlight'>${word}</span>`;
-      } else {
-        str += symbols[Math.floor(Math.random() * symbols.length)];
-      }
-    }
-    selectedText = str;
-    return str.match(/.{1,50}/g).join('\n');
-  }
-  document.getElementById("wordBlock").innerHTML = chaosText();
-
-  let matchedWord = "";
-  function checkWord() {
-    const input = document.getElementById("wordInput").value.toLowerCase().trim();
-    matchedWord = chosenWords.find(word => input === word.toLowerCase());
-    if (matchedWord) {
-      document.getElementById("step1").classList.add("hidden");
-      document.getElementById("step2").classList.remove("hidden");
-      initMemoryGame();
+  for (let i = 0; i < 700; i++) {
+    if (insertPoints.includes(i)) {
+      finalText += chosenWords[insertPoints.indexOf(i)].replace(/ /g, ""); // Убираем пробелы между словами
     } else {
-      alert("Попробуй ещё! Подсказка: это что-то тёплое.");
+      finalText += symbols[Math.floor(Math.random() * symbols.length)];
     }
   }
 
-  let firstCard = null;
-  let lock = false;
-  let matchedPairs = 0;
-  function initMemoryGame() {
-    const emojis = ["🍓","🌸","⭐","🍩"];
-    let pairs = emojis.concat(emojis).sort(() => 0.5 - Math.random());
-    const grid = document.getElementById("memoryGrid");
+  document.getElementById("textDisplay").textContent = finalText.match(/.{1,60}/g).join("\n");
 
-    pairs.forEach((emoji) => {
-      const card = document.createElement("div");
-      card.className = "memory-card";
-      card.dataset.value = emoji;
-      card.textContent = "";
-      card.onclick = () => {
-        if (lock || card.textContent) return;
-        card.textContent = emoji;
-        if (!firstCard) {
-          firstCard = card;
-        } else {
-          if (firstCard.dataset.value === card.dataset.value) {
-            firstCard = null;
-            matchedPairs++;
-            if (matchedPairs === 4) {
-              setTimeout(() => {
-                document.getElementById("step2").classList.add("hidden");
-                document.getElementById("step3").classList.remove("hidden");
-                initHeartGame();
-              }, 600);
-            }
-          } else {
-            lock = true;
-            setTimeout(() => {
-              card.textContent = "";
-              firstCard.textContent = "";
-              firstCard = null;
-              lock = false;
-            }, 800);
-          }
-        }
-      };
-      grid.appendChild(card);
-    });
-  }
+  const found = [];
 
-  function initHeartGame() {
-    const grid = document.getElementById("heartGrid");
-    const heartIndex = Math.floor(Math.random() * 9);
-    for (let i = 0; i < 9; i++) {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.textContent = "?";
-      card.onclick = () => {
-        if (i === heartIndex) {
-          card.textContent = "❤️";
-          setTimeout(() => {
-            document.getElementById("step3").classList.add("hidden");
-            document.getElementById("final").classList.remove("hidden");
-            startHearts();
-            document.getElementById("finalMsg").textContent = messages[matchedWord] || "Ты невероятная!";
-          }, 1000);
-        } else {
-          card.textContent = "❌";
-          card.style.pointerEvents = "none";
-        }
-      };
-      grid.appendChild(card);
+  function submitWord() {
+    const input = document.getElementById("wordInput").value.trim().toLowerCase().replace(/ /g, "");
+    const normalizedWords = chosenWords.map(w => w.toLowerCase().replace(/ /g, ""));
+
+    if (normalizedWords.includes(input) && !found.includes(input)) {
+      found.push(input);
+      document.getElementById("foundSlot").textContent += `\n${chosenWords[normalizedWords.indexOf(input)]}`;
+    } else {
+      alert("Попробуй другое слово, или ты уже его нашла.");
     }
-  }
-
-  function startHearts() {
-    for (let i = 0; i < 30; i++) {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.textContent = "❤️";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.top = "100vh";
-      heart.style.fontSize = 16 + Math.random() * 24 + "px";
-      heart.style.animationDuration = 3 + Math.random() * 5 + "s";
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 8000);
-    }
+    document.getElementById("wordInput").value = "";
   }
 </script>
 
