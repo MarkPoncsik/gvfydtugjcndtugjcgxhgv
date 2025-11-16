@@ -1,197 +1,145 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="sk">
 <head>
-    <meta charset="UTF-8">
-    <title>Форма перевірки психологічної придатності</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(120deg, #0f0c29, #302b63, #24243e);
-            color: #ECECEC;
-            font-family: Arial, sans-serif;
-        }
-        #quiz, #result {
-            max-width: 800px;
-            margin: 30px auto;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 20px 30px;
-            border: 1px solid #444;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
-        h1 {
-            color: #9a70f5;
-            text-align: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #555;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        h2 {
-            color: #FFDE59;
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .question {
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #444;
-        }
-        .question:last-child {
-            border-bottom: none;
-        }
-        .question h3 {
-            margin: 0 0 10px 0;
-            font-size: 16px;
-        }
-        .options label {
-            display: block;
-            margin-bottom: 5px;
-            cursor: pointer;
-        }
-        input[type="radio"] {
-            margin-right: 8px;
-        }
-        #submit-btn {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background: #9a70f5;
-            color: #fff;
-            border: none;
-            font-size: 16px;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-        #submit-btn:hover {
-            background: #7b4dd5;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Test: Odpadové hospodárstvo na Slovensku</title>
+<style>
+    body {
+        background-color: #001f4d; /* темно-синій фон */
+        color: #ffffff;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+    }
+    h1 {
+        text-align: center;
+        color: #00bfff;
+    }
+    .question {
+        margin-bottom: 20px;
+    }
+    label {
+        display: block;
+        margin: 5px 0;
+        cursor: pointer;
+    }
+    .correct {
+        color: #00ff00;
+        font-weight: bold;
+    }
+    .incorrect {
+        color: #ff4d4d;
+        font-weight: bold;
+    }
+    button {
+        background-color: #00bfff;
+        color: #001f4d;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+</style>
 </head>
 <body>
-<div id="quiz">
-    <h1>Форма перевірки психологічної придатності громадянина до служби Новому Порядку</h1>
-    <form id="loyalty-test">
-        <div class="question">
-            <h3>1. Чи вважаєте Ви відданість ідеям Нового Порядку Вашим обов'язком перед Батьківщиною?</h3>
-            <div class="options">
-                <label><input type="radio" name="q1" value="2">Так, це мій священний обов'язок.</label>
-                <label><input type="radio" name="q1" value="1">Так, але у мене є деякі застереження.</label>
-                <label><input type="radio" name="q1" value="0">Ні, я ставлю це під сумнів.</label>
-            </div>
-        </div>
-        <div class="question">
-            <h3>2. Чи повідомляли Ви компетентним органам про виявлені випадки підривної діяльності або недотримання ідеологічних норм?</h3>
-            <div class="options">
-                <label><input type="radio" name="q2" value="2">Так, завжди повідомляю про будь-яку підозрілу активність.</label>
-                <label><input type="radio" name="q2" value="1">Тільки якщо немає іншого виходу.</label>
-                <label><input type="radio" name="q2" value="0">Ні, це не моя справа.</label>
-            </div>
-        </div>
-        <div class="question">
-            <h3>3. Чи вважаєте Ви особисті інтереси важливішими за інтереси держави?</h3>
-            <div class="options">
-                <label><input type="radio" name="q3" value="2">Ні, особисте повинне поступатися державним інтересам.</label>
-                <label><input type="radio" name="q3" value="1">Часом, але в цілому інтереси держави важливіші.</label>
-                <label><input type="radio" name="q3" value="0">Так, кожен сам за себе.</label>
-            </div>
-        </div>
-        <div class="question">
-            <h3>4. Чи потрібно суворо карати тих, хто відкрито критикує владу Нового Порядку?</h3>
-            <div class="options">
-                <label><input type="radio" name="q4" value="2">Так, це зрада Батьківщини і має жорстко каратися.</label>
-                <label><input type="radio" name="q4" value="1">Потрібна перевірка та профілактичні бесіди.</label>
-                <label><input type="radio" name="q4" value="0">Ні, свобода думки повинна бути.</label>
-            </div>
-        </div>
-        <div class="question">
-            <h3>5. Чи брали Ви участь в урочистих заходах чи мітингах на підтримку лідера та ідеології Нового Порядку?</h3>
-            <div class="options">
-                <label><input type="radio" name="q5" value="2">Так, регулярно.</label>
-                <label><input type="radio" name="q5" value="1">Декілька разів, коли доводилося.</label>
-                <label><input type="radio" name="q5" value="0">Ні, ніколи.</label>
-            </div>
-        </div>
-        <div class="question">
-            <h3>6. Чи приймаєте Ви цілковиту інформаційну лінію державних ЗМІ за базову правду?</h3>
-            <div class="options">
-                <label><input type="radio" name="q6" value="2">Так, офіційні джерела завжди правдиві.</label>
-                <label><input type="radio" name="q6" value="1">Переважно так, з деякою обережністю.</label>
-                <label><input type="radio" name="q6" value="0">Ні, ЗМІ - пропаганда.</label>
-            </div>
-        </div>
-        <div class="question">
-            <h3>7. Чи допоможете Ви у виконанні плану трудової мобілізації за наказом влади?</h3>
-            <div class="options">
-                <label><input type="radio" name="q7" value="2">Так, негайно приступлю до роботи.</label>
-                <label><input type="radio" name="q7" value="1">За умови належної підготовки та згоди.</label>
-                <label><input type="radio" name="q7" value="0">Виконувати не буду.</label>
-            </div>
-        </div>
-        <div class="question">
-            <h3>8. Як би Ви відреагували, якщо б знайомий закликав Вас до організації непокори чи руху опору?</h3>
-            <div class="options">
-                <label><input type="radio" name="q8" value="2">Повідомлю про це у відповідні органи.</label>
-                <label><input type="radio" name="q8" value="1">Ввічливо відмовлюся.</label>
-                <label><input type="radio" name="q8" value="0">Приєднаюсь до руху опору.</label>
-            </div>
-        </div>
-        <div class="question">
-            <h3>9. Чи погоджуєтеся Ви з тим, що людину слід оцінювати за її поведінкою та підтримкою системи Нового Порядку?</h3>
-            <div class="options">
-                <label><input type="radio" name="q9" value="2">Так, вірність режиму є головним критерієм.</label>
-                <label><input type="radio" name="q9" value="1">Частково так, але і особисті якості важливі.</label>
-                <label><input type="radio" name="q9" value="0">Ні, кожен має право на власну позицію.</label>
-            </div>
-        </div>
-        <div class="question">
-            <h3>10. Чи підтримуєте Ви політику тотального контролю і дисципліни в усіх сферах життя заради безпеки держави?</h3>
-            <div class="options">
-                <label><input type="radio" name="q10" value="2">Так, це запорука нашого благополуччя.</label>
-                <label><input type="radio" name="q10" value="1">Так, але з м'якими винятками.</label>
-                <label><input type="radio" name="q10" value="0">Ні, це порушує права людини.</label>
-            </div>
-        </div>
-        <button type="button" id="submit-btn">Підібрати результат</button>
-    </form>
-</div>
-<div id="result" style="display:none;">
-    <!-- Результат буде відображено тут -->
-</div>
+<h1>Test: Odpadové hospodárstvo na Slovensku</h1>
+
+<form id="quizForm">
+    <div class="question">
+        <p>1. Ktorý typ odpadu patrí medzi komunálne odpady?</p>
+        <label><input type="radio" name="q1" value="a"> Papier z kancelárie</label>
+        <label><input type="radio" name="q1" value="b"> Zvyšky jedla z domácnosti</label>
+        <label><input type="radio" name="q1" value="c"> Staré auto</label>
+        <label><input type="radio" name="q1" value="d"> Chemické látky</label>
+    </div>
+
+    <div class="question">
+        <p>2. Ktorá spoločnosť zabezpečuje zber odpadu v Košiciach?</p>
+        <label><input type="radio" name="q2" value="a"> KOSIT</label>
+        <label><input type="radio" name="q2" value="b"> NATUR-PACK</label>
+        <label><input type="radio" name="q2" value="c"> ENVIPAK</label>
+        <label><input type="radio" name="q2" value="d"> IKEA</label>
+    </div>
+
+    <div class="question">
+        <p>3. Aký je cieľ systému Zero Waste?</p>
+        <label><input type="radio" name="q3" value="a"> Zvýšiť množstvo skládkovania</label>
+        <label><input type="radio" name="q3" value="b"> Minimalizovať vznik odpadu a podporovať jeho opätovné využitie</label>
+        <label><input type="radio" name="q3" value="c"> Spáliť všetok odpad</label>
+        <label><input type="radio" name="q3" value="d"> Zbierať iba plast</label>
+    </div>
+
+    <div class="question">
+        <p>4. Čo je ZEVO v Košiciach?</p>
+        <label><input type="radio" name="q4" value="a"> Zberný dvor pre elektroodpad</label>
+        <label><input type="radio" name="q4" value="b"> Spaľovňa odpadu na energetické využitie</label>
+        <label><input type="radio" name="q4" value="c"> Recyklačná linka na papier</label>
+        <label><input type="radio" name="q4" value="d"> Obchod s recyklovanými materiálmi</label>
+    </div>
+
+    <div class="question">
+        <p>5. Ktoré frakcie odpadu sa triedia vo farebných kontajneroch na Slovensku?</p>
+        <label><input type="radio" name="q5" value="a"> Papier, plasty, sklo, kov, bioodpad</label>
+        <label><input type="radio" name="q5" value="b"> Len plast a papier</label>
+        <label><input type="radio" name="q5" value="c"> Elektronika a nábytok</label>
+        <label><input type="radio" name="q5" value="d"> Textil a pneumatiky</label>
+    </div>
+
+    <div class="question">
+        <p>6. Aký problém je stále veľký v Košiciach?</p>
+        <label><input type="radio" name="q6" value="a"> Nedostatok obyvateľov</label>
+        <label><input type="radio" name="q6" value="b"> Nadmerné skládkovanie a nízka miera triedenia odpadu</label>
+        <label><input type="radio" name="q6" value="c"> Nadmerné recyklovanie</label>
+        <label><input type="radio" name="q6" value="d"> Nadbytok ZEVO zariadení</label>
+    </div>
+
+    <div class="question">
+        <p>7. Čo znamená rozšírená zodpovednosť výrobcu (RZV)?</p>
+        <label><input type="radio" name="q7" value="a"> Výrobcovia musia financovať zber a recykláciu svojich výrobkov po skončení životnosti</label>
+        <label><input type="radio" name="q7" value="b"> Výrobcovia môžu odpad vyhodiť kdekoľvek</label>
+        <label><input type="radio" name="q7" value="c"> Len štát je zodpovedný za odpad</label>
+        <label><input type="radio" name="q7" value="d"> Obyvatelia zbierajú výrobky bez platenia</label>
+    </div>
+
+    <button type="button" onclick="checkAnswers()">Перевірити</button>
+</form>
+
+<div id="result" style="margin-top:20px; font-size:18px;"></div>
 
 <script>
-document.getElementById('submit-btn').addEventListener('click', function() {
-    var totalScore = 0;
-    for (var i = 1; i <= 10; i++) {
-        var q = document.querySelector('input[name="q' + i + '"]:checked');
-        if (!q) {
-            alert('Будь ласка, дайте відповідь на всі питання.');
-            return;
+function checkAnswers() {
+    const answers = {
+        q1: "b",
+        q2: "a",
+        q3: "b",
+        q4: "b",
+        q5: "a",
+        q6: "b",
+        q7: "a"
+    };
+
+    let score = 0;
+    let resultHTML = "";
+
+    for (let i = 1; i <= 7; i++) {
+        const qName = "q" + i;
+        const selected = document.querySelector('input[name="' + qName + '"]:checked');
+        if (selected) {
+            if (selected.value === answers[qName]) {
+                resultHTML += `<p class="correct">Otázka ${i}: Správne ✅</p>`;
+                score++;
+            } else {
+                resultHTML += `<p class="incorrect">Otázka ${i}: Nesprávne ❌ (Správna odpoveď: ${answers[qName]})</p>`;
+            }
+        } else {
+            resultHTML += `<p class="incorrect">Otázka ${i}: Neodpovedané ❌ (Správna odpoveď: ${answers[qName]})</p>`;
         }
-        totalScore += parseInt(q.value);
     }
-    var conclusion = '';
-    if (totalScore >= 15) {
-        conclusion = 'За результатами психодіагностики виявлено зразкову лояльність громадянина. Присвоєно статус «Лояльний громадянин». Рекомендовано заохочення та подальше залучення до відповідальних завдань Нового Порядку.';
-    } else if (totalScore >= 10) {
-        conclusion = 'За результатами перевірки встановлено гранично допустимий рівень лояльності. Присвоєно статус «Під наглядом». Необхідно застосувати профілактичні заходи контролю та організувати додаткові роз’яснювальні бесіди з ідеології Нового Порядку.';
-    } else if (totalScore >= 5) {
-        conclusion = 'Результати тестування виявили низький рівень лояльності. Присвоєно статус «Ідеологічно нестабільний». Підлягає додатковій перевірці та ідеологічній перевихованню.';
-    } else {
-        conclusion = 'Отримані результати оцінено як абсолютно неприйнятні. Громадянин визнається «Ворогом системи». Застосовуються суворі заходи безпеки та розшукові заходи за встановленими нормативами.';
-    }
-    var resultDiv = document.getElementById('result');
-    var quizDiv = document.getElementById('quiz');
-    quizDiv.style.display = 'none';
-    resultDiv.style.display = 'block';
-    resultDiv.innerHTML = '<h2>Висновок</h2>' +
-        '<p>Визначений бал лояльності: ' + totalScore + '.</p>' +
-        '<p>' + conclusion + '</p>';
-});
+
+    resultHTML += `<p>Celkové skóre: ${score} / 7</p>`;
+    document.getElementById("result").innerHTML = resultHTML;
+}
 </script>
+
 </body>
 </html>
