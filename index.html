@@ -1,144 +1,174 @@
 <!DOCTYPE html>
-<html lang="sk">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Test: Odpadové hospodárstvo na Slovensku</title>
+<title>Вопрос</title>
 <style>
-    body {
-        background-color: #001f4d; /* темно-синій фон */
-        color: #ffffff;
-        font-family: Arial, sans-serif;
-        padding: 20px;
-    }
-    h1 {
-        text-align: center;
-        color: #00bfff;
-    }
-    .question {
-        margin-bottom: 20px;
-    }
-    label {
-        display: block;
-        margin: 5px 0;
-        cursor: pointer;
-    }
-    .correct {
-        color: #00ff00;
-        font-weight: bold;
-    }
-    .incorrect {
-        color: #ff4d4d;
-        font-weight: bold;
-    }
-    button {
-        background-color: #00bfff;
-        color: #001f4d;
-        border: none;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 5px;
-    }
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #fbc2eb 100%);
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  }
+
+  .window {
+    position: absolute;
+    width: 320px;
+    background: #ece9f1;
+    border: 1px solid #0033aa;
+    border-radius: 6px;
+    box-shadow: 4px 4px 12px rgba(0,0,0,0.4);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .titlebar {
+    background: linear-gradient(to right, #0a246a, #3a6ea5);
+    color: white;
+    padding: 6px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .titlebar .close {
+    background: #d9534f;
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    text-align: center;
+    line-height: 18px;
+    font-size: 12px;
+    cursor: default;
+  }
+
+  .content {
+    padding: 25px 20px;
+    text-align: center;
+    font-size: 17px;
+    color: #222;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 15px 0 20px 0;
+  }
+
+  button {
+    padding: 6px 22px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #888;
+    background: linear-gradient(to bottom, #f5f5f5, #d8d8d8);
+    cursor: pointer;
+  }
+
+  button:active {
+    background: #c0c0c0;
+  }
+
+  #yesBtn {
+    position: fixed;
+    transition: none;
+  }
+
+  .counter {
+    position: fixed;
+    bottom: 10px;
+    right: 15px;
+    color: rgba(0,0,0,0.4);
+    font-size: 12px;
+  }
 </style>
 </head>
 <body>
-<h1>Test: Odpadové hospodárstvo na Slovensku</h1>
 
-<form id="quizForm">
-    <div class="question">
-        <p>1. Ktorý typ odpadu patrí medzi komunálne odpady?</p>
-        <label><input type="radio" name="q1" value="a"> Papier z kancelárie</label>
-        <label><input type="radio" name="q1" value="b"> Zvyšky jedla z domácnosti</label>
-        <label><input type="radio" name="q1" value="c"> Staré auto</label>
-        <label><input type="radio" name="q1" value="d"> Chemické látky</label>
-    </div>
+<div class="window" id="mainWindow">
+  <div class="titlebar">
+    <span>Вопрос.exe</span>
+    <span class="close">✕</span>
+  </div>
+  <div class="content">
+    Хочешь целоваться? 😘
+  </div>
+  <div class="buttons">
+    <button id="yesBtn">Да</button>
+    <button id="noBtn">Нет</button>
+  </div>
+</div>
 
-    <div class="question">
-        <p>2. Ktorá spoločnosť zabezpečuje zber odpadu v Košiciach?</p>
-        <label><input type="radio" name="q2" value="a"> KOSIT</label>
-        <label><input type="radio" name="q2" value="b"> NATUR-PACK</label>
-        <label><input type="radio" name="q2" value="c"> ENVIPAK</label>
-        <label><input type="radio" name="q2" value="d"> IKEA</label>
-    </div>
-
-    <div class="question">
-        <p>3. Aký je cieľ systému Zero Waste?</p>
-        <label><input type="radio" name="q3" value="a"> Zvýšiť množstvo skládkovania</label>
-        <label><input type="radio" name="q3" value="b"> Minimalizovať vznik odpadu a podporovať jeho opätovné využitie</label>
-        <label><input type="radio" name="q3" value="c"> Spáliť všetok odpad</label>
-        <label><input type="radio" name="q3" value="d"> Zbierať iba plast</label>
-    </div>
-
-    <div class="question">
-        <p>4. Čo je ZEVO v Košiciach?</p>
-        <label><input type="radio" name="q4" value="a"> Zberný dvor pre elektroodpad</label>
-        <label><input type="radio" name="q4" value="b"> Spaľovňa odpadu na energetické využitie</label>
-        <label><input type="radio" name="q4" value="c"> Recyklačná linka na papier</label>
-        <label><input type="radio" name="q4" value="d"> Obchod s recyklovanými materiálmi</label>
-    </div>
-
-    <div class="question">
-        <p>5. Ktoré frakcie odpadu sa triedia vo farebných kontajneroch na Slovensku?</p>
-        <label><input type="radio" name="q5" value="a"> Papier, plasty, sklo, kov, bioodpad</label>
-        <label><input type="radio" name="q5" value="b"> Len plast a papier</label>
-        <label><input type="radio" name="q5" value="c"> Elektronika a nábytok</label>
-        <label><input type="radio" name="q5" value="d"> Textil a pneumatiky</label>
-    </div>
-
-    <div class="question">
-        <p>6. Aký problém je stále veľký v Košiciach?</p>
-        <label><input type="radio" name="q6" value="a"> Nedostatok obyvateľov</label>
-        <label><input type="radio" name="q6" value="b"> Nadmerné skládkovanie a nízka miera triedenia odpadu</label>
-        <label><input type="radio" name="q6" value="c"> Nadmerné recyklovanie</label>
-        <label><input type="radio" name="q6" value="d"> Nadbytok ZEVO zariadení</label>
-    </div>
-
-    <div class="question">
-        <p>7. Čo znamená rozšírená zodpovednosť výrobcu (RZV)?</p>
-        <label><input type="radio" name="q7" value="a"> Výrobcovia musia financovať zber a recykláciu svojich výrobkov po skončení životnosti</label>
-        <label><input type="radio" name="q7" value="b"> Výrobcovia môžu odpad vyhodiť kdekoľvek</label>
-        <label><input type="radio" name="q7" value="c"> Len štát je zodpovedný za odpad</label>
-        <label><input type="radio" name="q7" value="d"> Obyvatelia zbierajú výrobky bez platenia</label>
-    </div>
-
-    <button type="button" onclick="checkAnswers()">Перевірити</button>
-</form>
-
-<div id="result" style="margin-top:20px; font-size:18px;"></div>
+<div class="counter" id="counter"></div>
 
 <script>
-function checkAnswers() {
-    const answers = {
-        q1: "b",
-        q2: "a",
-        q3: "b",
-        q4: "b",
-        q5: "a",
-        q6: "b",
-        q7: "a"
-    };
+  const yesBtn = document.getElementById('yesBtn');
+  const noBtn = document.getElementById('noBtn');
+  const counter = document.getElementById('counter');
+  let clicks = 0;
+  const maxClicks = 10;
 
-    let score = 0;
-    let resultHTML = "";
+  function moveButtonRandomly() {
+    const btnWidth = yesBtn.offsetWidth;
+    const btnHeight = yesBtn.offsetHeight;
+    const maxX = window.innerWidth - btnWidth - 10;
+    const maxY = window.innerHeight - btnHeight - 10;
+    const newX = Math.random() * maxX;
+    const newY = Math.random() * maxY;
+    yesBtn.style.left = newX + 'px';
+    yesBtn.style.top = newY + 'px';
+  }
 
-    for (let i = 1; i <= 7; i++) {
-        const qName = "q" + i;
-        const selected = document.querySelector('input[name="' + qName + '"]:checked');
-        if (selected) {
-            if (selected.value === answers[qName]) {
-                resultHTML += `<p class="correct">Otázka ${i}: Správne ✅</p>`;
-                score++;
-            } else {
-                resultHTML += `<p class="incorrect">Otázka ${i}: Nesprávne ❌ (Správna odpoveď: ${answers[qName]})</p>`;
-            }
-        } else {
-            resultHTML += `<p class="incorrect">Otázka ${i}: Neodpovedané ❌ (Správna odpoveď: ${answers[qName]})</p>`;
-        }
+  // При наведении курсора кнопка тоже убегает (для азарта)
+  yesBtn.addEventListener('mouseenter', () => {
+    if (clicks < maxClicks) moveButtonRandomly();
+  });
+
+  yesBtn.addEventListener('click', () => {
+    clicks++;
+    counter.textContent = clicks < maxClicks ? `Попыток: ${clicks} / ${maxClicks}` : '';
+
+    if (clicks >= maxClicks) {
+      showFinalWindow();
+    } else {
+      moveButtonRandomly();
     }
+  });
 
-    resultHTML += `<p>Celkové skóre: ${score} / 7</p>`;
-    document.getElementById("result").innerHTML = resultHTML;
-}
+  noBtn.addEventListener('click', () => {
+    // "Нет" тоже слегка вредничает
+    document.querySelector('.content').textContent = 'А придётся! 😏';
+  });
+
+  function showFinalWindow() {
+    const win = document.createElement('div');
+    win.className = 'window';
+    win.style.top = '50%';
+    win.style.left = '50%';
+    win.innerHTML = `
+      <div class="titlebar">
+        <span>Итог.exe</span>
+        <span class="close">✕</span>
+      </div>
+      <div class="content">
+        Тогда бросай пить и курить! 🚭🍷
+      </div>
+      <div class="buttons">
+        <button onclick="this.closest('.window').remove()">Хорошо</button>
+      </div>
+    `;
+    document.body.appendChild(win);
+    yesBtn.style.display = 'none';
+    noBtn.style.display = 'none';
+  }
 </script>
 
 </body>
