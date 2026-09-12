@@ -77,11 +77,6 @@
     background: #c0c0c0;
   }
 
-  #yesBtn {
-    position: fixed;
-    transition: none;
-  }
-
   .counter {
     position: fixed;
     bottom: 10px;
@@ -110,27 +105,26 @@
 <div class="counter" id="counter"></div>
 
 <script>
+  const mainWindow = document.getElementById('mainWindow');
   const yesBtn = document.getElementById('yesBtn');
   const noBtn = document.getElementById('noBtn');
   const counter = document.getElementById('counter');
   let clicks = 0;
   const maxClicks = 10;
 
-  function moveButtonRandomly() {
-    const btnWidth = yesBtn.offsetWidth;
-    const btnHeight = yesBtn.offsetHeight;
-    const maxX = window.innerWidth - btnWidth - 10;
-    const maxY = window.innerHeight - btnHeight - 10;
-    const newX = Math.random() * maxX;
-    const newY = Math.random() * maxY;
-    yesBtn.style.left = newX + 'px';
-    yesBtn.style.top = newY + 'px';
-  }
+  function moveWindowRandomly() {
+    const winWidth = mainWindow.offsetWidth;
+    const winHeight = mainWindow.offsetHeight;
+    const maxX = window.innerWidth - winWidth - 10;
+    const maxY = window.innerHeight - winHeight - 10;
+    const newX = Math.max(10, Math.random() * maxX);
+    const newY = Math.max(10, Math.random() * maxY);
 
-  // При наведении курсора кнопка тоже убегает (для азарта)
-  yesBtn.addEventListener('mouseenter', () => {
-    if (clicks < maxClicks) moveButtonRandomly();
-  });
+    // Переключаемся с transform-центрирования на абсолютные left/top
+    mainWindow.style.transform = 'none';
+    mainWindow.style.left = newX + 'px';
+    mainWindow.style.top = newY + 'px';
+  }
 
   yesBtn.addEventListener('click', () => {
     clicks++;
@@ -139,7 +133,7 @@
     if (clicks >= maxClicks) {
       showFinalWindow();
     } else {
-      moveButtonRandomly();
+      moveWindowRandomly();
     }
   });
 
@@ -151,6 +145,7 @@
   function showFinalWindow() {
     const win = document.createElement('div');
     win.className = 'window';
+    win.id = 'finalWindow';
     win.style.top = '50%';
     win.style.left = '50%';
     win.innerHTML = `
@@ -158,16 +153,40 @@
         <span>Итог.exe</span>
         <span class="close">✕</span>
       </div>
-      <div class="content">
+      <div class="content" id="finalContent">
         Тогда бросай пить и курить! 🚭🍷
       </div>
-      <div class="buttons">
-        <button onclick="this.closest('.window').remove()">Хорошо</button>
+      <div class="buttons" id="finalButtons">
+        <button id="finalYes">Хорошо</button>
+        <button id="finalNo">Нет</button>
       </div>
     `;
     document.body.appendChild(win);
     yesBtn.style.display = 'none';
     noBtn.style.display = 'none';
+
+    const finalYes = document.getElementById('finalYes');
+    const finalNo = document.getElementById('finalNo');
+    const finalContent = document.getElementById('finalContent');
+    const finalButtons = document.getElementById('finalButtons');
+
+    finalYes.addEventListener('click', () => {
+      finalContent.textContent = 'Умничка ) ❤️❤️❤️';
+      finalButtons.remove();
+    });
+
+    finalNo.addEventListener('click', () => {
+      const winWidth = win.offsetWidth;
+      const winHeight = win.offsetHeight;
+      const maxX = window.innerWidth - winWidth - 10;
+      const maxY = window.innerHeight - winHeight - 10;
+      const newX = Math.max(10, Math.random() * maxX);
+      const newY = Math.max(10, Math.random() * maxY);
+
+      win.style.transform = 'none';
+      win.style.left = newX + 'px';
+      win.style.top = newY + 'px';
+    });
   }
 </script>
 
